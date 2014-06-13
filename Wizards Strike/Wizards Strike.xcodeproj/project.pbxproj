@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CB6D33B819480907000FAF77 /* cloud.plist in Resources */ = {isa = PBXBuildFile; fileRef = CB6D33B619480907000FAF77 /* cloud.plist */; };
+		CB6D33B919480907000FAF77 /* cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = CB6D33B719480907000FAF77 /* cloud.png */; };
+		CB6D33BB19480918000FAF77 /* heart.png in Resources */ = {isa = PBXBuildFile; fileRef = CB6D33BA19480918000FAF77 /* heart.png */; };
 		CB938B46193FBC4700CEBD0A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB938B45193FBC4700CEBD0A /* QuartzCore.framework */; };
 		CB938B48193FBC4700CEBD0A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB938B47193FBC4700CEBD0A /* OpenGLES.framework */; };
 		CB938B4A193FBC4700CEBD0A /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB938B49193FBC4700CEBD0A /* OpenAL.framework */; };
@@ -226,7 +229,8 @@
 		CB938E18193FC62900CEBD0A /* pumpkinSFX.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CB938E0A193FC62900CEBD0A /* pumpkinSFX.mp3 */; };
 		CB938E19193FC62900CEBD0A /* wizard.png in Resources */ = {isa = PBXBuildFile; fileRef = CB938E0B193FC62900CEBD0A /* wizard.png */; };
 		CB938E1B193FC82A00CEBD0A /* Cauldron.png in Resources */ = {isa = PBXBuildFile; fileRef = CB938E1A193FC82A00CEBD0A /* Cauldron.png */; };
-		CB938E1D1940029400CEBD0A /* particlefx_04.png in Resources */ = {isa = PBXBuildFile; fileRef = CB938E1C1940029400CEBD0A /* particlefx_04.png */; };
+		CBCBD1BA19493FBF0047716E /* blue-cloud.plist in Resources */ = {isa = PBXBuildFile; fileRef = CBCBD1B819493FBF0047716E /* blue-cloud.plist */; };
+		CBCBD1BB19493FBF0047716E /* blue-cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = CBCBD1B919493FBF0047716E /* blue-cloud.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -240,6 +244,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CB6D33B619480907000FAF77 /* cloud.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = cloud.plist; path = Resources/cloud.plist; sourceTree = "<group>"; };
+		CB6D33B719480907000FAF77 /* cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cloud.png; path = Resources/cloud.png; sourceTree = "<group>"; };
+		CB6D33BA19480918000FAF77 /* heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = heart.png; path = Resources/heart.png; sourceTree = "<group>"; };
 		CB938B42193FBC4700CEBD0A /* Wizards Strike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wizards Strike.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB938B45193FBC4700CEBD0A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		CB938B47193FBC4700CEBD0A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -682,7 +689,8 @@
 		CB938E0A193FC62900CEBD0A /* pumpkinSFX.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pumpkinSFX.mp3; path = Resources/pumpkinSFX.mp3; sourceTree = "<group>"; };
 		CB938E0B193FC62900CEBD0A /* wizard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wizard.png; path = Resources/wizard.png; sourceTree = "<group>"; };
 		CB938E1A193FC82A00CEBD0A /* Cauldron.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Cauldron.png; path = Resources/Cauldron.png; sourceTree = "<group>"; };
-		CB938E1C1940029400CEBD0A /* particlefx_04.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = particlefx_04.png; sourceTree = "<group>"; };
+		CBCBD1B819493FBF0047716E /* blue-cloud.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "blue-cloud.plist"; path = "Resources/blue-cloud.plist"; sourceTree = "<group>"; };
+		CBCBD1B919493FBF0047716E /* blue-cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blue-cloud.png"; path = "Resources/blue-cloud.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -754,9 +762,13 @@
 		CB938B5E193FBC4700CEBD0A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CBCBD1B819493FBF0047716E /* blue-cloud.plist */,
+				CBCBD1B919493FBF0047716E /* blue-cloud.png */,
 				CB938DFE193FC62900CEBD0A /* back2.png */,
 				CB938DFF193FC62900CEBD0A /* bubbleSFX.mp3 */,
-				CB938E1C1940029400CEBD0A /* particlefx_04.png */,
+				CB6D33B619480907000FAF77 /* cloud.plist */,
+				CB6D33B719480907000FAF77 /* cloud.png */,
+				CB6D33BA19480918000FAF77 /* heart.png */,
 				CB938E01193FC62900CEBD0A /* Gems01.png */,
 				CB938E1A193FC82A00CEBD0A /* Cauldron.png */,
 				CB938E02193FC62900CEBD0A /* Gems02.png */,
@@ -1667,6 +1679,7 @@
 				CB938B75193FBC4700CEBD0A /* Icon-120.png in Resources */,
 				CB938D79193FBC4A00CEBD0A /* LICENSE_CCBReader.txt in Resources */,
 				CB938E1B193FC82A00CEBD0A /* Cauldron.png in Resources */,
+				CB6D33BB19480918000FAF77 /* heart.png in Resources */,
 				CB938B6B193FBC4700CEBD0A /* Icon@2x.png in Resources */,
 				CB938B7D193FBC4700CEBD0A /* Icon-Small@2x.png in Resources */,
 				CB938E15193FC62900CEBD0A /* jingleSFX.mp3 in Resources */,
@@ -1676,19 +1689,22 @@
 				CB938B60193FBC4700CEBD0A /* Default.png in Resources */,
 				CB938B69193FBC4700CEBD0A /* Icon.png in Resources */,
 				CB938E12193FC62900CEBD0A /* Gems04.png in Resources */,
+				CB6D33B919480907000FAF77 /* cloud.png in Resources */,
 				CB938B77193FBC4700CEBD0A /* Icon-iPad-Spotlight-iOS7@2x.png in Resources */,
 				CB938B66193FBC4700CEBD0A /* Default-Landscape~ipad.png in Resources */,
 				CB938B7B193FBC4700CEBD0A /* Icon-Small.png in Resources */,
 				CB938E16193FC62900CEBD0A /* poofSFX.mp3 in Resources */,
 				CB938B79193FBC4700CEBD0A /* Icon-Small-50.png in Resources */,
+				CBCBD1BB19493FBF0047716E /* blue-cloud.png in Resources */,
 				CB938E13193FC62900CEBD0A /* Gems05.png in Resources */,
 				CB938D62193FBC4A00CEBD0A /* LICENSE_Kazmath.txt in Resources */,
-				CB938E1D1940029400CEBD0A /* particlefx_04.png in Resources */,
+				CB6D33B819480907000FAF77 /* cloud.plist in Resources */,
 				CB938B6D193FBC4700CEBD0A /* Icon-72.png in Resources */,
 				CB938E19193FC62900CEBD0A /* wizard.png in Resources */,
 				CB938CBB193FBC4900CEBD0A /* LICENSE_cocos2d.txt in Resources */,
 				CB938E10193FC62900CEBD0A /* Gems02.png in Resources */,
 				CB938B64193FBC4700CEBD0A /* Default-568h@2x.png in Resources */,
+				CBCBD1BA19493FBF0047716E /* blue-cloud.plist in Resources */,
 				CB938B84193FBC4800CEBD0A /* iTunesArtwork in Resources */,
 				CB938B7F193FBC4700CEBD0A /* Icon-Spotlight-iOS7.png in Resources */,
 				CB938B73193FBC4700CEBD0A /* Icon-76@2x.png in Resources */,
@@ -2053,6 +2069,7 @@
 				CB938DFA193FBC4B00CEBD0A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		CB938DFB193FBC4B00CEBD0A /* Build configuration list for PBXNativeTarget "Wizards Strike" */ = {
 			isa = XCConfigurationList;
@@ -2061,6 +2078,7 @@
 				CB938DFD193FBC4B00CEBD0A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

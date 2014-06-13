@@ -9,6 +9,7 @@
 
 #import "HelloWorldScene.h"
 #import "IntroScene.h"
+#import "CCAnimation.h"
 
 // -----------------------------------------------------------------------
 #pragma mark - HelloWorldScene
@@ -18,8 +19,18 @@
 {
     CCSprite *_cauldron;
     CCPhysicsNode *_physics;
+    CCNode *bottom;
+    int lives;
+    NSMutableArray *livesArray;
+    int count;
     int score;
+    int multiplier;
     CCLabelTTF *scoreLabel;
+    OALSimpleAudio *audio;
+    CCSprite *_darkCloud;
+    CCActionAnimate *darkCloudAction;
+    CCSprite *_blueCloud;
+    CCActionAnimate *blueCloudAction;
 }
 
 // -----------------------------------------------------------------------
@@ -58,9 +69,18 @@
     score = 00;
     scoreLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"Score: %d",score] fontName:@"Verdana-Bold" fontSize:18.0f];
     scoreLabel.positionType = CCPositionTypeNormalized;
-    scoreLabel.position = ccp(0.15f, 0.95f);
+    scoreLabel.position = ccp(0.10f, 0.95f);
     [self addChild:scoreLabel];
     
+    //Add Lives
+    lives = 4;
+    livesArray = [[NSMutableArray alloc] init];
+    for(int i = 0; i < lives; i++){
+        CCSprite *heart = [CCSprite spriteWithImageNamed:@"heart.png"];
+        heart.position = ccp((i+2)*25, self.contentSize.height - 65);
+        [livesArray addObject:heart];
+        [self addChild:heart];
+    }
     //Create Wizard Sprite
     CCSprite *wizard = [CCSprite spriteWithImageNamed:@"wizard.png"];
     wizard.position = ccp(self.contentSize.width - wizard.contentSize.width/2 , wizard.contentSize.height/2);
@@ -69,9 +89,10 @@
     //Setup Physics
     _physics = [CCPhysicsNode node];
     _physics.gravity = ccp(0,0);
+    //_physics.debugDraw = YES;
     _physics.collisionDelegate = self;
     [self addChild:_physics];
-    
+   
     // Add Cauldron Sprite
     _cauldron = [CCSprite spriteWithImageNamed:@"Cauldron.png"];
     _cauldron.position  = ccp(self.contentSize.width/2, _cauldron.contentSize.height/2);
@@ -81,6 +102,27 @@
     _cauldron.physicsBody.collisionType = @"cauldronCollision";
     [_physics addChild:_cauldron];
    
+    //Set Cloud Animations
+    [self setCloudAnimate];
+    
+    //Setup Audio Effects
+    audio = [OALSimpleAudio sharedInstance];
+    [audio preloadEffect:@"poofSFX.mp3"];
+    [audio preloadEffect:@"jingleSFX.mp3"];
+    [audio preloadEffect:@"pumpkinSFX.mp3"];
+    
+    //Set Bottom of Scene as a Physics Body for Collision
+    CGRect bottomRect = CGRectMake(0, -10, self.contentSize.width, 10);
+    bottom = [CCNode node];
+    bottom.physicsBody = [CCPhysicsBody bodyWithRect:bottomRect cornerRadius:0];
+    bottom.physicsBody.type = CCPhysicsBodyTypeStatic;
+    bottom.physicsBody.collisionGroup = @"bottomGroup";
+    bottom.physicsBody.collisionType = @"bottomCollision";
+    [_physics addChild:bottom];
+    
+    //Set Multiplier
+    multiplier = 1;
+    
     // done
 	return self;
 }
@@ -102,7 +144,7 @@
     [super onEnter];
     //Set Timers for Adding Gems and Pumpkins
     [self schedule:@selector(addGems) interval:2.0f];
-    [self schedule:@selector(addPumpkin) interval:6.0f];
+    [self schedule:@selector(addPumpkin) interval:6.25f];
     // In pre-v3, touch enable and scheduleUpdate was called here
     // In v3, touch is enabled by setting userInterActionEnabled for the individual nodes
     // Per frame update is automatically enabled, if update is overridden
@@ -136,7 +178,7 @@
     }else if(touchLoc.x < _cauldron.contentSize.width/2){
         moveLoc = CGPointMake(_cauldron.contentSize.width/2, _cauldron.contentSize.height/2);
     }
-    CCLOG(@"Move sprite to @ %@",NSStringFromCGPoint(touchLoc));
+    
     
     // Move Cauldron to touch location
     CCActionMoveTo *actionMove = [CCActionMoveTo actionWithDuration:1.0f position:moveLoc];
@@ -197,9 +239,14 @@
 -(BOOL)ccPhysicsCollisionBegin:(CCPhysicsCollisionPair *)pair gemCollision:(CCNode *)gem cauldronCollision:(CCNode *)cauldron
 {
     [gem removeFromParent];
-    [[OALSimpleAudio sharedInstance] playEffect:@"poofSFX.mp3"];
-    [[OALSimpleAudio sharedInstance] playEffect:@"jingleSFX.mp3"];
+    [audio playEffect:@"poofSFX.mp3"];
+    [audio playEffect:@"jingleSFX.mp3"];
+    [self setMultiplier];
     [self setScore];
+    if([_blueCloud numberOfRunningActions] < 1){
+        [_blueCloud runAction:blueCloudAction];
+    }
+    
     return YES;
 }
 
@@ -207,16 +254,102 @@
 -(BOOL)ccPhysicsCollisionBegin:(CCPhysicsCollisionPair *)pair pumpkinCollision:(CCNode *)pumpkin cauldronCollision:(CCNode *)cauldron
 {
     [pumpkin removeFromParent];
-    [[OALSimpleAudio sharedInstance] playEffect:@"pumpkinSFX.mp3"];
-    
+    [audio playEffect:@"pumpkinSFX.mp3"];
+    [self endMultiplier];
+    [self removeLife];
+    if([_darkCloud numberOfRunningActions] < 1){
+        [_darkCloud runAction:darkCloudAction];
+    }
+    return YES;
+}
+
+//Collision Detection between Gems and Bottom of Scene
+-(BOOL)ccPhysicsCollisionBegin:(CCPhysicsCollisionPair *)pair gemCollision:(CCNode *)nodeA bottomCollision:(CCNode *)nodeB
+{
+    [self endMultiplier];
     return YES;
 }
 
 //Set Score on Gem to Cauldron Collision
 -(void)setScore
 {
-    score = score + 75;
+    int addScore = 75 * multiplier;
+    score = score + addScore;
+    NSString *multiplierString = [[NSString alloc] initWithFormat:@"x%d", multiplier];
+    if(multiplier == 1){
+        multiplierString = @"";
+    }
+    [scoreLabel setString:[NSString stringWithFormat:@"Score: %d %@", score, multiplierString]];
+}
+
+//Set Multiplier
+-(void)setMultiplier
+{
+    count++;
+    if(count % 3 == 0){
+        multiplier = count/3 + 1;
+    }
+}
+
+//Remove Multiplier
+-(void)endMultiplier
+{
+    count = 0;
+    multiplier = 1;
     [scoreLabel setString:[NSString stringWithFormat:@"Score: %d", score]];
+}
+
+//Remove Life and Check if End of Game
+-(void)removeLife
+{
+    lives--;
+    [self removeChild:[livesArray lastObject] cleanup:YES];
+    [livesArray removeLastObject];
+    
+    //End Game
+    if(lives == 0){
+        [[CCDirector sharedDirector] replaceScene:[IntroScene scene]];
+    }
+}
+
+//Set Cloud Animations
+-(void)setCloudAnimate
+{
+    //Dark Cloud Animation for Pumpkin Collision
+    [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"cloud.plist"];
+    NSMutableArray *darkCloudFrames = [NSMutableArray array];
+    for(int i = 1; i<32; i++){
+        NSString *sheetIndex = [NSString stringWithFormat:@"cloud-%d.png", i];
+        if(i < 10){
+            sheetIndex = [NSString stringWithFormat:@"cloud-0%d.png", i];
+        }
+        [darkCloudFrames addObject:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:sheetIndex]];
+    }
+    
+    _darkCloud = [CCSprite spriteWithImageNamed:@"cloud-01.png"];
+    _darkCloud.position = ccp(_cauldron.contentSize.width/2, _cauldron.contentSize.height - 10);
+    CCAnimation *darkCloudAnimate = [CCAnimation animationWithSpriteFrames:darkCloudFrames delay:0.04f];
+    [darkCloudAnimate setRestoreOriginalFrame:YES];
+    darkCloudAction = [CCActionAnimate actionWithAnimation:darkCloudAnimate];
+    [_cauldron addChild:_darkCloud];
+    
+    //Blue Cloud Animation for Gem Collision
+   [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"blue-cloud.plist"];
+    NSMutableArray *blueCloudFrames = [NSMutableArray array];
+    for(int i = 1; i<28; i++){
+        NSString *sheetIndex = [NSString stringWithFormat:@"blue-cloud_%d.png", i];
+        if(i < 10){
+            sheetIndex = [NSString stringWithFormat:@"blue-cloud_0%d.png", i];
+        }
+        [blueCloudFrames addObject:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:sheetIndex]];
+    }
+    
+    _blueCloud = [CCSprite spriteWithImageNamed:@"blue-cloud_01.png"];
+    _blueCloud.position = ccp(_cauldron.contentSize.width/2, _cauldron.contentSize.height - 10);
+    CCAnimation *blueCloudAnimate = [CCAnimation animationWithSpriteFrames:blueCloudFrames delay:0.04f];
+    [blueCloudAnimate setRestoreOriginalFrame:YES];
+    blueCloudAction = [CCActionAnimate actionWithAnimation:blueCloudAnimate];
+    [_cauldron addChild:_blueCloud];
 }
 // -----------------------------------------------------------------------
 #pragma mark - Button Callbacks
