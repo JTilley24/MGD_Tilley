@@ -1,7 +1,7 @@
 //
 //  PauseScene.m
 //  Wizards Strike
-//
+//  MGD Term 1406
 //  Created by Justin Tilley on 6/19/14.
 //  Copyright 2014 Justin Tilley. All rights reserved.
 //
@@ -12,6 +12,8 @@
 @implementation PauseScene
 {
     CCSpriteBatchNode *spriteSheet;
+    float fontSize;
+    NSString *backImage;
 }
 +(CCScene *) scene
 {
@@ -24,21 +26,33 @@
 -(id) init
 {
     if((self = [super init])){
-        //Add Pause Label
-        CCLabelTTF *pausedLabel = [CCLabelTTF labelWithString:@"PAUSED" fontName:@"Verdana-Bold" fontSize:20.0f];
+        //Check for iPad or iPhone
+        NSInteger device = [[CCConfiguration sharedConfiguration] runningDevice];
+        if(device == CCDeviceiPad){
+            spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"sprite_sheet@2x.png"];
+            [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"sprite_sheet@2x.plist"];
+            fontSize = 50.0f;
+            backImage = @"back@2x.png";
+        }else{
+            spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"sprite_sheet.png"];
+            [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"sprite_sheet.plist"];
+            fontSize = 22.0f;
+            backImage = @"back.png";
+        }
+        
+        [self addChild:spriteSheet];
+        
+         // Create Background Image
+        CCSprite *background = [CCSprite spriteWithImageNamed:backImage];
+        background.position = ccp(self.contentSize.width/2, self.contentSize.height/2);
+        background.opacity = 0.5f;
+        [self addChild:background];
+        
+        //Add Paused Label
+        CCLabelTTF *pausedLabel = [CCLabelTTF labelWithString:@"PAUSED" fontName:@"Verdana-Bold" fontSize:fontSize];
         pausedLabel.positionType = CCPositionTypeNormalized;
         pausedLabel.position = ccp(0.5f, 0.85f);
         [self addChild:pausedLabel];
-       
-        //Check if iPad or iPhone
-        NSInteger device = [[CCConfiguration sharedConfiguration] runningDevice];
-        if(device == CCDeviceiPad){
-            spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"sprites@2x.png"];
-            [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"sprites@2x.plist"];
-        }else{
-            spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"sprites.png"];
-            [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"sprites.plist"];
-        }
         
         //Add Resume Button
         CCButton *resumeButton = [CCButton buttonWithTitle:@"" spriteFrame:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"resume-button.png"]];
@@ -59,8 +73,7 @@
 //Back to Main Menu
 -(void) quitPressed
 {
-    CCScene *intro = [IntroScene scene];
-    [[CCDirector sharedDirector] replaceScene:intro];
+    [[CCDirector sharedDirector] replaceScene:[IntroScene scene]];
 }
 
 //Return to Game

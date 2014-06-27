@@ -11,7 +11,7 @@
 #import "IntroScene.h"
 #import "CCAnimation.h"
 #import "PauseScene.h"
-
+#import "GameOverScene.h"
 // -----------------------------------------------------------------------
 #pragma mark - HelloWorldScene
 // -----------------------------------------------------------------------
@@ -63,13 +63,13 @@
     //Check for iPad or iPhone
     NSInteger device = [[CCConfiguration sharedConfiguration] runningDevice];
     if(device == CCDeviceiPad){
-        spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"sprites@2x.png"];
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"sprites@2x.plist"];
+        spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"sprite_sheet@2x.png"];
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"sprite_sheet@2x.plist"];
         fontSize = 18.0f;
         backImage = @"back@2x.png";
     }else{
-        spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"sprites.png"];
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"sprites.plist"];
+        spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"sprite_sheet.png"];
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"sprite_sheet.plist"];
         fontSize = 10.0f;
         backImage = @"back.png";
     }
@@ -131,7 +131,7 @@
     // Add Cauldron Sprite
     _cauldron = [CCSprite spriteWithImageNamed:@"Cauldron.png"];
     _cauldron.position  = ccp(self.contentSize.width/2, _cauldron.contentSize.height/2);
-    _cauldron.physicsBody = [CCPhysicsBody bodyWithRect:(CGRect){CGPointZero, _cauldron.contentSize} cornerRadius:0];
+    _cauldron.physicsBody = [CCPhysicsBody bodyWithRect:CGRectMake(_cauldron.contentSize.width * 0.125, _cauldron.contentSize.height/1.6, _cauldron.contentSize.width * 0.75, _cauldron.contentSize.height/4) cornerRadius:0];
     _cauldron.physicsBody.type = CCPhysicsBodyTypeStatic;
     _cauldron.physicsBody.collisionGroup = @"cauldronGroup";
     _cauldron.physicsBody.collisionType = @"cauldronCollision";
@@ -319,6 +319,10 @@
         multiplierString = @"";
     }
     [scoreLabel setString:[NSString stringWithFormat:@"Score: %d %@", score, multiplierString]];
+    if (score > 20000) {
+        
+        [[CCDirector sharedDirector] replaceScene:[GameOverScene scene:@"win" withScore:[NSString stringWithFormat:@"Score: %d", score]]];
+    }
 }
 
 //Set Multiplier
@@ -349,7 +353,7 @@
     
     //End Game
     if(lives == 0){
-        [[CCDirector sharedDirector] replaceScene:[IntroScene scene]];
+        [[CCDirector sharedDirector] replaceScene:[GameOverScene scene:@"lose" withScore:[NSString stringWithFormat:@"Score: %d", score]]];
     }
 }
 
@@ -358,32 +362,32 @@
 {
     //Dark Cloud Animation for Pumpkin Collision
     NSMutableArray *darkCloudFrames = [NSMutableArray array];
-    for(int i = 1; i<32; i++){
-        NSString *sheetIndex = [NSString stringWithFormat:@"cloud-%d.png", i];
+    for(int i = 1; i<31; i++){
+        NSString *sheetIndex = [NSString stringWithFormat:@"dark_cloud-%d.png", i];
         if(i < 10){
-            sheetIndex = [NSString stringWithFormat:@"cloud-0%d.png", i];
+            sheetIndex = [NSString stringWithFormat:@"dark_cloud-0%d.png", i];
         }
         [darkCloudFrames addObject:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:sheetIndex]];
     }
     
-    _darkCloud = [CCSprite spriteWithImageNamed:@"cloud-01.png"];
+    _darkCloud = [CCSprite spriteWithImageNamed:@"dark_cloud-01.png"];
     _darkCloud.position = ccp(_cauldron.contentSize.width/2, _cauldron.contentSize.height - 10);
     CCAnimation *darkCloudAnimate = [CCAnimation animationWithSpriteFrames:darkCloudFrames delay:0.04f];
     [darkCloudAnimate setRestoreOriginalFrame:YES];
     darkCloudAction = [CCActionAnimate actionWithAnimation:darkCloudAnimate];
     [_cauldron addChild:_darkCloud];
-    
+   
     //Blue Cloud Animation for Gem Collision
     NSMutableArray *blueCloudFrames = [NSMutableArray array];
-    for(int i = 1; i<28; i++){
-        NSString *sheetIndex = [NSString stringWithFormat:@"blue-cloud_%d.png", i];
+    for(int i = 1; i<32; i++){
+        NSString *sheetIndex = [NSString stringWithFormat:@" blue_cloud-%d.png", i];
         if(i < 10){
-            sheetIndex = [NSString stringWithFormat:@"blue-cloud_0%d.png", i];
+            sheetIndex = [NSString stringWithFormat:@" blue_cloud-0%d.png", i];
         }
         [blueCloudFrames addObject:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:sheetIndex]];
     }
     
-    _blueCloud = [CCSprite spriteWithImageNamed:@"blue-cloud_01.png"];
+    _blueCloud = [CCSprite spriteWithImageNamed:@" blue_cloud-01.png"];
     _blueCloud.position = ccp(_cauldron.contentSize.width/2, _cauldron.contentSize.height - 10);
     CCAnimation *blueCloudAnimate = [CCAnimation animationWithSpriteFrames:blueCloudFrames delay:0.04f];
     [blueCloudAnimate setRestoreOriginalFrame:YES];
